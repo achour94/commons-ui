@@ -15,6 +15,7 @@ import { SubstationModificationDto } from './substationModification.types';
 
 export const substationModificationFormSchema = object()
     .shape({
+        [FieldConstants.EQUIPMENT_ID]: string().required(),
         [FieldConstants.EQUIPMENT_NAME]: string().nullable(),
         [FieldConstants.COUNTRY]: string().nullable(),
     })
@@ -23,18 +24,18 @@ export const substationModificationFormSchema = object()
 export type SubstationModificationFormData = InferType<typeof substationModificationFormSchema>;
 
 export const substationModificationEmptyFormData: SubstationModificationFormData = {
+    [FieldConstants.EQUIPMENT_ID]: '',
     [FieldConstants.EQUIPMENT_NAME]: '',
     [FieldConstants.COUNTRY]: null,
     [FieldConstants.ADDITIONAL_PROPERTIES]: [],
 };
 
 export const substationModificationFormToDto = (
-    substationForm: SubstationModificationFormData,
-    originalDto?: SubstationModificationDto
+    substationForm: SubstationModificationFormData
 ): SubstationModificationDto => {
     return {
         type: 'SUBSTATION_MODIFICATION',
-        equipmentId: originalDto?.equipmentId ?? '',
+        equipmentId: substationForm.equipmentID,
         equipmentName: { value: sanitizeString(substationForm.equipmentName) ?? undefined },
         country: substationForm.country != null ? { value: substationForm.country } : null,
         properties: toModificationProperties(substationForm),
@@ -45,6 +46,7 @@ export const substationModificationDtoToForm = (
     substationDto: SubstationModificationDto
 ): SubstationModificationFormData => {
     return {
+        equipmentID: substationDto.equipmentId,
         equipmentName: substationDto.equipmentName?.value ?? '',
         country: substationDto.country?.value ?? null,
         AdditionalProperties: getFilledPropertiesFromModification(substationDto.properties),

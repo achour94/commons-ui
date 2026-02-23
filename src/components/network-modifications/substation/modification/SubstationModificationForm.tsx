@@ -7,6 +7,7 @@
 
 import { Grid, TextField } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useWatch } from 'react-hook-form';
 import GridItem from '../../../grid/grid-item';
 import { TextInput } from '../../../inputs';
 import { CountrySelectionInput } from '../../../inputs/reactHookForm/CountrySelectionInput';
@@ -18,19 +19,19 @@ import { SubstationModificationInfos } from './substationModification.types';
 
 interface SubstationModificationFormProps {
     substationToModify?: SubstationModificationInfos | null;
-    equipmentId: string;
 }
 
-export function SubstationModificationForm({ substationToModify, equipmentId }: Readonly<SubstationModificationFormProps>) {
+export function SubstationModificationForm({ substationToModify }: Readonly<SubstationModificationFormProps>) {
     const { locale } = useIntl();
     const { translate } = useLocalizedCountries(locale as GsLang);
+    const equipmentId = useWatch({ name: FieldConstants.EQUIPMENT_ID });
 
     const substationIdField = (
         <TextField
             size="small"
             fullWidth
             label={'ID'}
-            value={equipmentId}
+            value={equipmentId ?? ''}
             InputProps={{
                 readOnly: true,
             }}
