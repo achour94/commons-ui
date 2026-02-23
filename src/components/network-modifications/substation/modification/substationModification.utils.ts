@@ -5,8 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { InferType, object, string } from 'yup';
-import { modificationPropertiesSchema } from '../../common/properties/propertyUtils';
-import { FieldConstants } from '../../../../utils';
+import {
+    getFilledPropertiesFromModification,
+    modificationPropertiesSchema,
+    toModificationProperties,
+} from '../../common/properties/propertyUtils';
+import { FieldConstants, sanitizeString } from '../../../../utils';
+import { SubstationModificationDto } from './substationModification.types';
 
 export const substationModificationFormSchema = object()
     .shape({
@@ -21,4 +26,27 @@ export const substationModificationEmptyFormData: SubstationModificationFormData
     [FieldConstants.EQUIPMENT_NAME]: '',
     [FieldConstants.COUNTRY]: null,
     [FieldConstants.ADDITIONAL_PROPERTIES]: [],
+};
+
+export const substationModificationFormToDto = (
+    substationForm: SubstationModificationFormData,
+    originalDto?: SubstationModificationDto
+): SubstationModificationDto => {
+    return {
+        type: 'SUBSTATION_MODIFICATION',
+        equipmentId: originalDto?.equipmentId ?? '',
+        equipmentName: { value: sanitizeString(substationForm.equipmentName) ?? undefined },
+        country: substationForm.country != null ? { value: substationForm.country } : null,
+        properties: toModificationProperties(substationForm),
+    };
+};
+
+export const substationModificationDtoToForm = (
+    substationDto: SubstationModificationDto
+): SubstationModificationFormData => {
+    return {
+        equipmentName: substationDto.equipmentName?.value ?? '',
+        country: substationDto.country?.value ?? null,
+        AdditionalProperties: getFilledPropertiesFromModification(substationDto.properties),
+    };
 };

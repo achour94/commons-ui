@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { Property } from '../../common';
 
 export interface SubstationModificationInfos {
     id: string;
@@ -11,3 +12,16 @@ export interface SubstationModificationInfos {
     country: string | null;
     properties?: Record<string, string>;
 }
+
+export interface AttributeModification<T> {
+    value?: T;
+    op?: string;
+}
+
+export type SubstationModificationDto = {
+    type: string;
+    equipmentId: string;
+    equipmentName?: AttributeModification<string> | null;
+    country?: AttributeModification<string> | null;
+    properties?: Property[] | null;
+};
