@@ -5,5 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export * from './creation';
-export * from './modification';
+export interface SubstationModificationInfos {
+    id: string;
+    name?: string;
+    country: string | null;
+    properties?: Record<string, string>;
+}
